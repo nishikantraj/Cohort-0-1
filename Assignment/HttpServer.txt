@@ -1,0 +1,6 @@
+1. create a todo app that let user to store their data on server
+2. create a http server from the scratch in C
+3. create a http server in the rust using atrix-web
+4. create a http server in the golang using gurilla framework
+5. create a http server in java using spring boot
+6. Middleware
