@@ -41,9 +41,57 @@
  */
   const express = require('express');
   const bodyParser = require('body-parser');
-  
+  const fs= require("fs");
+const { log } = require('console');
+
   const app = express();
   
   app.use(bodyParser.json());
+
+  const filePath = "./todos.json"
+  app.get('/todos',(req,res)=>{
+    fs.readFile(filePath,"utf-8", (err,data)=>{
+      if(err)
+        return res.status(500).json({error:"failed to retrieve the file"})
+      res.status(200).json(JSON.parse(data))
+    })
+  })
+  
+  app.get("/todos/:id",(req,res)=>{
+    const id = parseInt(req.params.id)
+    fs.readFile('todos.json','utf-8',(err,data)=>{
+      data = JSON.parse(data)
+      if(err)
+        return res.status(500).json({error:"failed to retrieve the file"})
+      else if(id<0 || id>=data.length)
+        return res.status(404).json("not found")
+      res.status(200).json(data[id])
+    })
+  })
+
+  app.use(bodyParser.json())
+
+  app.post('/todos',(req,res)=>{
+    const reqData = req.body
+    
+    let id = NaN
+    fs.readFile('todos.json','utf-8',(err,data)=>{
+      const finalData = (JSON.parse(data))
+      id = finalData.length
+      reqData["id"]= id
+      finalData.push(reqData)
+
+      fs.writeFile('./todos.json', JSON.stringify(finalData, null, 2),(err)=>{
+        if (err) {
+          console.log("Error writing to file:", err);
+          return res.status(500).json({ error: "Failed to write to file" });
+        }
+          console.log("Successfully written");
+        res.status(201).json({"id":id})
+      })
+    })
+  })
+
+  app.listen(3001)
   
   module.exports = app;
