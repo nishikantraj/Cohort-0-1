@@ -73,7 +73,6 @@ const { log } = require('console');
 
   app.post('/todos',(req,res)=>{
     const reqData = req.body
-    
     let id = NaN
     fs.readFile('todos.json','utf-8',(err,data)=>{
       const finalData = (JSON.parse(data))
@@ -83,7 +82,6 @@ const { log } = require('console');
 
       fs.writeFile('./todos.json', JSON.stringify(finalData, null, 2),(err)=>{
         if (err) {
-          console.log("Error writing to file:", err);
           return res.status(500).json({ error: "Failed to write to file" });
         }
           console.log("Successfully written");
@@ -92,6 +90,51 @@ const { log } = require('console');
     })
   })
 
-  app.listen(3001)
+  app.put('/todos/:id',(req,res)=>{
+    const id = req.params.id
+    const reqData = req.body
+    fs.readFile('todos.json','utf-8',(err,data)=>{
+      const finalData = (JSON.parse(data))
+      if(id > -1 && id < finalData.length){
+        finalData[id]["completed"] = reqData["completed"]
+        delete finalData[id].description
+        fs.writeFile('./todos.json', JSON.stringify(finalData, null, 2),(err)=>{
+          if (err) {
+            return res.status(500).json({ error: "Failed to update the file" });
+          }
+            
+          res.status(200).send("found and updated")
+        })
+      }
+      else{
+        res.status(404).send("Not found")
+      }
+    })
+  })
+
+  app.delete('/todos/:id',(req,res)=>{
+    const id = req.params.id
+    fs.readFile('todos.json','utf-8',(err,data)=>{
+      const finalData = (JSON.parse(data))
+      if(id > -1 && id < finalData.length){
+        finalData.splice(id,1)
+        fs.writeFile('./todos.json', JSON.stringify(finalData, null, 2),(err)=>{
+          if (err) {
+            return res.status(500).json({ error: "Failed to update the file" });
+          }
+          res.status(200).send("found and updated")
+        })
+      }
+      else{
+        res.status(404).send("Not found")
+      }
+    })
+  })
+
+  app.use((req, res) => {
+    res.status(404).send("Route not found");
+  });
+
+  // app.listen(3001)
   
   module.exports = app;

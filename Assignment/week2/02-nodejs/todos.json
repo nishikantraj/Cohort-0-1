@@ -1,24 +1,7 @@
 [
   {
-    "id": 0,
-    "title": "leetcode",
-    "description": "Solve 1 leetcode medium and hard"
-  },
-  {
-    "id": 1,
-    "title": "temple",
-    "description": "visit temple at 2 pm"
-  },
-  {
-    "title": "read book",
-    "completed": true,
-    "descriptio": "I should read comics book",
-    "id": 2
-  },
-  {
-    "title": "movies",
-    "completed": false,
-    "descriptio": "mission impossible",
-    "id": 3
+    "title": "New Todo",
+    "description": "A new todo item",
+    "id": 0
   }
 ]
